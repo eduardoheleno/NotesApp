@@ -2,6 +2,8 @@ package com.example.notesapp.fragments
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.Context
+import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
@@ -22,29 +24,25 @@ class NoteDialogFragment : DialogFragment() {
     private lateinit var binding: FragmentNoteDialogBinding
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return AlertDialog.Builder(requireContext())
-            .setView(R.layout.fragment_note_dialog)
-            .create()
-    }
+        val inflater = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        binding = FragmentNoteDialogBinding.inflate(inflater)
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        dialog?.let { dialog ->
-            dialog.setCanceledOnTouchOutside(false)
-            dialog.window?.let { window ->
-                window.attributes.windowAnimations = R.style.DialogAnimation
-                window.setGravity(Gravity.BOTTOM)
-                window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                window.attributes.y = 100
-            }
+        binding.noteViewModel = noteViewModel
+        binding.lifecycleOwner = this
+
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(binding.root)
+            .create()
+
+        dialog.setCanceledOnTouchOutside(false)
+        dialog.window?.let {
+            it.attributes.windowAnimations = R.style.DialogAnimation
+            it.setGravity(Gravity.BOTTOM)
+            it.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            it.attributes.y = 100
         }
 
-        println(noteViewModel.currentTitle)
-
-        binding = FragmentNoteDialogBinding.inflate(inflater, container, false)
-        return binding.root
+        return dialog
     }
 
     companion object {
