@@ -43,6 +43,15 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
         _isEditingNoteContent.value = true
     }
 
+    fun setOpenExistingNote(note: Note) {
+        _currentNote.value = note
+        currentNoteTitle.value = note.title
+        currentNoteContent.value = note.content
+
+        _isEditingNoteTitle.value = false
+        _isEditingNoteContent.value = false
+    }
+
     fun insert(note: Note) = viewModelScope.launch {
         repository.insertOrUpdate(note)
     }

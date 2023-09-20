@@ -3,15 +3,15 @@ package com.example.notesapp.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.notesapp.R
 import com.example.notesapp.room.Note
 
-class NoteListAdapter : ListAdapter<Note, NoteListAdapter.NoteViewHolder>(NotesComparator()) {
+class NoteListAdapter(private val callbackInterface: CallbackInterface) : ListAdapter<Note, NoteListAdapter.NoteViewHolder>(NotesComparator()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
         return NoteViewHolder.create(parent)
     }
@@ -19,16 +19,21 @@ class NoteListAdapter : ListAdapter<Note, NoteListAdapter.NoteViewHolder>(NotesC
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
         val current = getItem(position)
 
-        holder.bind(current)
+        holder.bind(current, callbackInterface)
     }
 
     class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val noteContainerItemView: LinearLayout = itemView.findViewById(R.id.noteContainer)
         private val noteTitleItemView: TextView = itemView.findViewById(R.id.noteTitle)
         private val noteContentItemView: TextView = itemView.findViewById(R.id.noteContent)
 
-        fun bind(note: Note) {
+        fun bind(note: Note, callbackInterface: CallbackInterface) {
             noteTitleItemView.text = note.title
             noteContentItemView.text = note.content
+
+            noteContainerItemView.setOnClickListener {
+                callbackInterface.openDialogWithNote(note)
+            }
         }
 
         companion object {
@@ -48,5 +53,9 @@ class NoteListAdapter : ListAdapter<Note, NoteListAdapter.NoteViewHolder>(NotesC
         override fun areContentsTheSame(oldItem: Note, newItem: Note): Boolean {
             return oldItem.content == newItem.content
         }
+    }
+
+    interface CallbackInterface {
+        fun openDialogWithNote(note: Note)
     }
 }
