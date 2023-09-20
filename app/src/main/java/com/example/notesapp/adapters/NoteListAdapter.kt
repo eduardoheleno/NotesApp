@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.notesapp.R
 import com.example.notesapp.room.Note
 
@@ -17,13 +18,16 @@ class NoteListAdapter : ListAdapter<Note, NoteListAdapter.NoteViewHolder>(NotesC
 
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
         val current = getItem(position)
-        holder.bind(current.content)
+
+        holder.bind(current)
     }
     class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val noteTitleItemView: TextView = itemView.findViewById(R.id.noteTitle)
         private val noteContentItemView: TextView = itemView.findViewById(R.id.noteContent)
 
-        fun bind(text: String) {
-            noteContentItemView.text = text
+        fun bind(note: Note) {
+            noteTitleItemView.text = note.title
+            noteContentItemView.text = note.content
         }
 
         companion object {

@@ -5,12 +5,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.notesapp.room.Note
 import com.example.notesapp.room.NoteRepository
 import kotlinx.coroutines.launch
 
 class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
+    val allNotes: LiveData<List<Note>> = repository.allNotes.asLiveData()
+
     private val _currentNote = MutableLiveData<Note?>()
     val currentNoteTitle = MutableLiveData<String>()
     val currentNoteContent = MutableLiveData<String>()

@@ -10,7 +10,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/notesRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager" />
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/note_list_item"
+            />
     </FrameLayout>
 </layout>

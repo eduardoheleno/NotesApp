@@ -5,10 +5,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.notesapp.R
+import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.notesapp.adapters.NoteListAdapter
 import com.example.notesapp.databinding.FragmentNotesListBinding
+import com.example.notesapp.itemdecorators.NoteItemDecorator
+import com.example.notesapp.room.NotesApplication
+import com.example.notesapp.viewmodels.NoteViewModel
+import com.example.notesapp.viewmodels.NoteViewModelFactory
 
 /**
  * A simple [Fragment] subclass.
@@ -16,6 +20,9 @@ import com.example.notesapp.databinding.FragmentNotesListBinding
  * create an instance of this fragment.
  */
 class NotesListFragment : Fragment() {
+    private val noteViewModel: NoteViewModel by activityViewModels {
+        NoteViewModelFactory((activity?.application as NotesApplication).repository)
+    }
     private lateinit var binding: FragmentNotesListBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,11 +36,17 @@ class NotesListFragment : Fragment() {
 
         val recyclerView = binding.notesRecyclerView
         val adapter = NoteListAdapter()
+
         recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        recyclerView.addItemDecoration(NoteItemDecorator())
+
+        noteViewModel.allNotes.observe(viewLifecycleOwner) {
+            it?.let {
+                adapter.submitList(it)
+            }
+        }
 
         return binding.root
-        // Inflate the layout for this fragment
-//        return inflater.inflate(R.layout.fragment_notes_list, container, false)
     }
 }
