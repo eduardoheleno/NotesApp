@@ -6,21 +6,22 @@ import android.content.Context
 import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.Window
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.example.notesapp.R
 import com.example.notesapp.databinding.FragmentNoteDialogBinding
+import com.example.notesapp.room.Note
+import com.example.notesapp.room.NotesApplication
 import com.example.notesapp.viewmodels.NoteViewModel
+import com.example.notesapp.viewmodels.NoteViewModelFactory
 
 class NoteDialogFragment : DialogFragment() {
-    private val noteViewModel: NoteViewModel by activityViewModels()
+    private val noteViewModel: NoteViewModel by activityViewModels {
+        NoteViewModelFactory((activity?.application as NotesApplication).repository)
+    }
     private lateinit var binding: FragmentNoteDialogBinding
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -43,6 +44,17 @@ class NoteDialogFragment : DialogFragment() {
         }
 
         return dialog
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        val noteTitle = binding.editNoteTitleText.text.toString()
+        val noteContent = binding.editNoteContentText.text.toString()
+
+        if (noteTitle.isNotEmpty() && noteContent.isNotEmpty()) {
+            val note = Note(noteTitle, noteContent)
+            noteViewModel.insert(note)
+        }
     }
 
     companion object {

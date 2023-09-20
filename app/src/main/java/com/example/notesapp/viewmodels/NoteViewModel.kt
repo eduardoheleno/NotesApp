@@ -1,6 +1,6 @@
 package com.example.notesapp.viewmodels
 
-import android.view.View
+import androidx.databinding.BaseObservable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,34 +12,36 @@ import kotlinx.coroutines.launch
 
 class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
     private val _currentNote = MutableLiveData<Note?>()
-    private val _currentTitle = MutableLiveData<String>()
-    private val _currentContent = MutableLiveData<String>()
-    private val _noteTitleEditVisibility = MutableLiveData<Int>()
-    private val _noteContentEditVisibility = MutableLiveData<Int>()
+    val currentNoteTitle = MutableLiveData<String>()
+    val currentNoteContent = MutableLiveData<String>()
+
+    private val _isEditingNoteTitle = MutableLiveData<Boolean>()
+    private val _isEditingNoteContent = MutableLiveData<Boolean>()
+
     val currentNote: LiveData<Note?>
         get() = _currentNote
-    val currentTitle: LiveData<String>
-        get() = _currentTitle
-    val currentContent: LiveData<String>
-        get() = _currentContent
-    val noteTitleEditVisibility: LiveData<Int>
-        get() = _noteTitleEditVisibility
-    val noteContentEditVisibility: LiveData<Int>
-        get() = _noteContentEditVisibility
+    val isEditingNoteTitle: LiveData<Boolean>
+        get() = _isEditingNoteTitle
+    val isEditingNoteContent: LiveData<Boolean>
+        get() = _isEditingNoteContent
 
     init {
-        _noteTitleEditVisibility.value = View.GONE
-        _noteContentEditVisibility.value = View.GONE
+        _currentNote.value = null
+        _isEditingNoteTitle.value = false
+        _isEditingNoteContent.value = false
+    }
+
+    fun setEditingNewNote() {
+        _currentNote.value = null
+        currentNoteTitle.value = ""
+        currentNoteContent.value = ""
+
+        _isEditingNoteTitle.value = true
+        _isEditingNoteContent.value = true
     }
 
     fun insert(note: Note) = viewModelScope.launch {
         repository.insertOrUpdate(note)
-    }
-
-    fun setEmptyFields() {
-        _currentNote.value = null
-        _currentTitle.value = ""
-        _currentContent.value = ""
     }
 }
 

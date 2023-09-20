@@ -21,10 +21,10 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         binding.addNewNoteBtn.setOnClickListener {
-            noteViewModel.setEmptyFields()
-
             val dialog = NoteDialogFragment()
             dialog.show(supportFragmentManager, NoteDialogFragment.NOTE_DIALOG_FRAGMENT_TAG)
+
+            noteViewModel.setEditingNewNote()
         }
     }
 }
