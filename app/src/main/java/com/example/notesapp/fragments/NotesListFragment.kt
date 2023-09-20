@@ -6,10 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.notesapp.adapters.NoteListAdapter
 import com.example.notesapp.databinding.FragmentNotesListBinding
-import com.example.notesapp.itemdecorators.NoteItemDecorator
 import com.example.notesapp.room.NotesApplication
 import com.example.notesapp.viewmodels.NoteViewModel
 import com.example.notesapp.viewmodels.NoteViewModelFactory
@@ -39,13 +39,12 @@ class NotesListFragment : Fragment() {
 
         recyclerView.adapter = adapter
         recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
-        recyclerView.addItemDecoration(NoteItemDecorator())
 
-        noteViewModel.allNotes.observe(viewLifecycleOwner) {
+        noteViewModel.allNotes.observe(viewLifecycleOwner, Observer {
             it?.let {
                 adapter.submitList(it)
             }
-        }
+        })
 
         return binding.root
     }
