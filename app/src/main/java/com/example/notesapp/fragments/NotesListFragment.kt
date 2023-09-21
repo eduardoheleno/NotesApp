@@ -1,10 +1,12 @@
 package com.example.notesapp.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -25,9 +27,7 @@ class NotesListFragment : Fragment(), NoteListAdapter.CallbackInterface {
         NoteViewModelFactory((activity?.application as NotesApplication).repository)
     }
     private lateinit var binding: FragmentNotesListBinding
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    private lateinit var adapter: NoteListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,7 +36,7 @@ class NotesListFragment : Fragment(), NoteListAdapter.CallbackInterface {
         binding = FragmentNotesListBinding.inflate(inflater, container, false)
 
         val recyclerView = binding.notesRecyclerView
-        val adapter = NoteListAdapter(this)
+        adapter = NoteListAdapter(this)
 
         recyclerView.adapter = adapter
         recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
@@ -47,13 +47,38 @@ class NotesListFragment : Fragment(), NoteListAdapter.CallbackInterface {
             }
         })
 
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            @SuppressLint("NotifyDataSetChanged")
+            override fun handleOnBackPressed() {
+                if (noteViewModel.isOnSelectMode.value == true) {
+                    noteViewModel.exitSelectMode()
+                    adapter.notifyDataSetChanged()
+                } else {
+                    requireActivity().finish()
+                }
+            }
+        })
+
         return binding.root
     }
 
-    override fun openDialogWithNote(note: Note) {
-        val dialog = NoteDialogFragment()
-        dialog.show(requireActivity().supportFragmentManager, NoteDialogFragment.NOTE_DIALOG_FRAGMENT_TAG)
+    override fun setIsOnSelectMode() {
+        noteViewModel.setIsOnSelectMode()
+    }
 
-        noteViewModel.setOpenExistingNote(note)
+    override fun onClickNote(note: Note, itemPosition: Int) {
+        if (noteViewModel.isOnSelectMode.value == true && !note.selected) {
+            note.selected = true
+            adapter.notifyItemChanged(itemPosition)
+        } else if (noteViewModel.isOnSelectMode.value == true && note.selected) {
+            note.selected = false
+            noteViewModel.checkIfStillOnSelectMode()
+            adapter.notifyItemChanged(itemPosition)
+        } else {
+            val dialog = NoteDialogFragment()
+            dialog.show(requireActivity().supportFragmentManager, NoteDialogFragment.NOTE_DIALOG_FRAGMENT_TAG)
+
+            noteViewModel.setOpenExistingNote(note)
+        }
     }
 }

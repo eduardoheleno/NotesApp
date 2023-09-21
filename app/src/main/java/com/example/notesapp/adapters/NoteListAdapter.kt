@@ -1,5 +1,6 @@
 package com.example.notesapp.adapters
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,20 +20,42 @@ class NoteListAdapter(private val callbackInterface: CallbackInterface) : ListAd
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
         val current = getItem(position)
 
-        holder.bind(current, callbackInterface)
+        holder.noteContainerItemView.setOnLongClickListener {
+            current.selected = true
+            notifyItemChanged(position)
+            callbackInterface.setIsOnSelectMode()
+
+            true
+        }
+
+        holder.bind(current, position, callbackInterface)
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
+
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
     }
 
     class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val noteContainerItemView: LinearLayout = itemView.findViewById(R.id.noteContainer)
+        val noteContainerItemView: LinearLayout = itemView.findViewById(R.id.noteContainer)
         private val noteTitleItemView: TextView = itemView.findViewById(R.id.noteTitle)
         private val noteContentItemView: TextView = itemView.findViewById(R.id.noteContent)
 
-        fun bind(note: Note, callbackInterface: CallbackInterface) {
+        fun bind(note: Note, itemPosition: Int, callbackInterface: CallbackInterface) {
             noteTitleItemView.text = note.title
             noteContentItemView.text = note.content
 
+            if (note.selected) {
+                noteContainerItemView.setBackgroundColor(Color.GRAY)
+            } else {
+                noteContainerItemView.setBackgroundResource(R.drawable.note_list_item_shape)
+            }
+
             noteContainerItemView.setOnClickListener {
-                callbackInterface.openDialogWithNote(note)
+                callbackInterface.onClickNote(note, itemPosition)
             }
         }
 
@@ -56,6 +79,7 @@ class NoteListAdapter(private val callbackInterface: CallbackInterface) : ListAd
     }
 
     interface CallbackInterface {
-        fun openDialogWithNote(note: Note)
+        fun onClickNote(note: Note, itemPosition: Int)
+        fun setIsOnSelectMode()
     }
 }

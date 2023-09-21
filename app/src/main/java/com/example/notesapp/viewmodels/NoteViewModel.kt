@@ -1,6 +1,5 @@
 package com.example.notesapp.viewmodels
 
-import androidx.databinding.BaseObservable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,17 +20,23 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
     private val _isEditingNoteTitle = MutableLiveData<Boolean>()
     private val _isEditingNoteContent = MutableLiveData<Boolean>()
 
+    private val _isOnSelectMode = MutableLiveData<Boolean>()
+
     val currentNote: LiveData<Note?>
         get() = _currentNote
     val isEditingNoteTitle: LiveData<Boolean>
         get() = _isEditingNoteTitle
     val isEditingNoteContent: LiveData<Boolean>
         get() = _isEditingNoteContent
+    val isOnSelectMode: LiveData<Boolean>
+        get() = _isOnSelectMode
 
     init {
         _currentNote.value = null
         _isEditingNoteTitle.value = false
         _isEditingNoteContent.value = false
+
+        _isOnSelectMode.value = false
     }
 
     fun setEditingNewNote() {
@@ -50,6 +55,25 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
 
         _isEditingNoteTitle.value = false
         _isEditingNoteContent.value = false
+    }
+
+    fun setIsOnSelectMode() {
+        _isOnSelectMode.value = true
+    }
+
+    fun checkIfStillOnSelectMode() {
+        val selectedNotes = allNotes.value?.filter { it.selected }
+        if (selectedNotes?.isEmpty() == true) {
+            _isOnSelectMode.value = false
+        }
+    }
+
+    fun exitSelectMode() {
+        allNotes.value?.forEach {
+            it.selected = false
+        }
+
+        _isOnSelectMode.value = false
     }
 
     fun insert(note: Note) = viewModelScope.launch {
