@@ -1,6 +1,7 @@
 package com.example.notesapp.room
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
@@ -11,4 +12,10 @@ interface NoteDao {
     fun getAllWords(): Flow<List<Note>>
     @Upsert
     suspend fun insertOrUpdate(note: Note)
+
+    @Query("DELETE FROM note WHERE id IN(:idList)")
+    suspend fun deleteListOfNotesIds(idList: List<Int>)
+
+    @Delete
+    suspend fun delete(note: Note)
 }

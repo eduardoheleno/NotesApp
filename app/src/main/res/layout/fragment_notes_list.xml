@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <FrameLayout
         android:id="@+id/notes_list_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingEnd="15dp"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         tools:context=".fragments.NotesListFragment">
 
         <androidx.recyclerview.widget.RecyclerView
@@ -15,5 +15,6 @@
             android:layout_height="wrap_content"
             tools:listitem="@layout/note_list_item"
             />
+
     </FrameLayout>
 </layout>
