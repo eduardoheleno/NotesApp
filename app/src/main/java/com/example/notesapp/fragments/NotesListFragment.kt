@@ -35,17 +35,34 @@ class NotesListFragment : Fragment(), NoteListAdapter.CallbackInterface {
     ): View {
         binding = FragmentNotesListBinding.inflate(inflater, container, false)
 
+        observeSelectMode()
+
         val recyclerView = binding.notesRecyclerView
         adapter = NoteListAdapter(this)
 
         recyclerView.adapter = adapter
         recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
 
-        noteViewModel.allNotes.observe(viewLifecycleOwner, Observer {
+        noteViewModel.allNotes.observe(viewLifecycleOwner) {
             it?.let {
                 adapter.submitList(it)
             }
-        })
+        }
+
+        binding.addNewNoteBtn.setOnClickListener {
+            val dialog = NoteDialogFragment()
+            dialog.show(requireActivity().supportFragmentManager, NoteDialogFragment.NOTE_DIALOG_FRAGMENT_TAG)
+
+            noteViewModel.setEditingNewNote()
+        }
+
+        binding.removeNoteBtn.setOnClickListener {
+            noteViewModel.getSelectedNoteIds()?.let {
+                println(it)
+
+                noteViewModel.deleteMultipleNotesById(it)
+            }
+        }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             @SuppressLint("NotifyDataSetChanged")
@@ -79,6 +96,18 @@ class NotesListFragment : Fragment(), NoteListAdapter.CallbackInterface {
             dialog.show(requireActivity().supportFragmentManager, NoteDialogFragment.NOTE_DIALOG_FRAGMENT_TAG)
 
             noteViewModel.setOpenExistingNote(note)
+        }
+    }
+
+    private fun observeSelectMode() {
+        noteViewModel.isOnSelectMode.observe(this) {
+            if (it) {
+                binding.addNewNoteBtn.hide()
+                binding.removeNoteBtn.show()
+            } else {
+                binding.addNewNoteBtn.show()
+                binding.removeNoteBtn.hide()
+            }
         }
     }
 }

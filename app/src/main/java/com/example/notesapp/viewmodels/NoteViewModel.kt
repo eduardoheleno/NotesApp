@@ -80,13 +80,17 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
         repository.insertOrUpdate(note)
     }
 
-    fun deleteAllSelectedNotes() = viewModelScope.launch {
+    fun getSelectedNoteIds(): List<Int>? {
         allNotes.value?.let { notes ->
-            val selectedNotes = notes.filter { it.selected }.map { note -> note.id }
-            repository.deleteListOfNotesIds(selectedNotes)
-
-            _isOnSelectMode.value = false
+            return notes.filter { it.selected }.map { note -> note.id }
         }
+
+        return null
+    }
+
+    fun deleteMultipleNotesById(ids: List<Int>) = viewModelScope.launch {
+        repository.deleteListOfNotesIds(ids)
+        _isOnSelectMode.value = false
     }
 
     fun delete(note: Note) = viewModelScope.launch {

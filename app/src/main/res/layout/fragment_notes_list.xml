@@ -2,19 +2,44 @@
 <layout xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <FrameLayout
-        android:id="@+id/notes_list_fragment"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingEnd="15dp"
-        tools:context=".fragments.NotesListFragment">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/notesRecyclerView"
+        android:layout_height="match_parent">
+        <FrameLayout
+            android:id="@+id/notes_list_fragment"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:listitem="@layout/note_list_item"
-            />
+            android:layout_height="match_parent"
+            android:paddingEnd="15dp"
+            tools:context=".fragments.NotesListFragment">
 
-    </FrameLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/notesRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:listitem="@layout/note_list_item" />
+
+        </FrameLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/addNewNoteBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:clickable="true"
+            app:layout_anchor="@+id/notes_list_fragment"
+            app:layout_anchorGravity="end|bottom"
+            app:srcCompat="@drawable/baseline_add_24" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/removeNoteBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:visibility="gone"
+            app:backgroundTint="@android:color/holo_red_light"
+            app:layout_anchor="@+id/addNewNoteBtn"
+            app:layout_anchorGravity="center"
+            app:srcCompat="@drawable/baseline_delete_24" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 </layout>

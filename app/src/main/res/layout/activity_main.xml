@@ -37,30 +37,9 @@
                 android:id="@+id/fragmentContainerView"
                 android:name="com.example.notesapp.fragments.NotesListFragment"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="match_parent" />
 
         </LinearLayout>
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/addNewNoteBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="20dp"
-            android:clickable="true"
-            android:src="@android:drawable/ic_input_add"
-            android:focusable="true" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/removeNoteBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:visibility="gone"
-            app:backgroundTint="@android:color/holo_red_light"
-            app:layout_anchor="@+id/addNewNoteBtn"
-            app:layout_anchorGravity="center"
-            app:srcCompat="@drawable/baseline_delete_24" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
