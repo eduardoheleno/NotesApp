@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.notesapp.adapters.NoteListAdapter
 import com.example.notesapp.databinding.FragmentNotesListBinding
@@ -22,7 +21,7 @@ import com.example.notesapp.viewmodels.NoteViewModelFactory
  * Use the [NotesListFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class NotesListFragment : Fragment(), NoteListAdapter.CallbackInterface {
+class NotesListFragment : Fragment() {
     private val noteViewModel: NoteViewModel by activityViewModels {
         NoteViewModelFactory((activity?.application as NotesApplication).repository)
     }
@@ -36,12 +35,7 @@ class NotesListFragment : Fragment(), NoteListAdapter.CallbackInterface {
         binding = FragmentNotesListBinding.inflate(inflater, container, false)
 
         observeSelectMode()
-
-        val recyclerView = binding.notesRecyclerView
-        adapter = NoteListAdapter(this)
-
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        initAdapter()
 
         noteViewModel.allNotes.observe(viewLifecycleOwner) {
             it?.let {
@@ -64,6 +58,10 @@ class NotesListFragment : Fragment(), NoteListAdapter.CallbackInterface {
             }
         }
 
+        binding.debugButton.setOnClickListener {
+            noteViewModel.insertMultipleRegistersDebug()
+        }
+
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             @SuppressLint("NotifyDataSetChanged")
             override fun handleOnBackPressed() {
@@ -79,28 +77,44 @@ class NotesListFragment : Fragment(), NoteListAdapter.CallbackInterface {
         return binding.root
     }
 
-    override fun setIsOnSelectMode() {
-        noteViewModel.setIsOnSelectMode()
-    }
+    private fun initAdapter() {
+        val recyclerView = binding.notesRecyclerView
+        adapter = NoteListAdapter()
 
-    override fun onClickNote(note: Note, itemPosition: Int) {
-        if (noteViewModel.isOnSelectMode.value == true && !note.selected) {
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+
+        noteViewModel.allNotes.observe(viewLifecycleOwner) {
+            it?.let {
+                adapter.submitList(it)
+            }
+        }
+
+        adapter.onLongItemClick = { note: Note, itemPosition: Int ->
             note.selected = true
+            noteViewModel.setIsOnSelectMode()
             adapter.notifyItemChanged(itemPosition)
-        } else if (noteViewModel.isOnSelectMode.value == true && note.selected) {
-            note.selected = false
-            noteViewModel.checkIfStillOnSelectMode()
-            adapter.notifyItemChanged(itemPosition)
-        } else {
-            val dialog = NoteDialogFragment()
-            dialog.show(requireActivity().supportFragmentManager, NoteDialogFragment.NOTE_DIALOG_FRAGMENT_TAG)
+        }
 
-            noteViewModel.setOpenExistingNote(note)
+        adapter.onItemClick = { note: Note, itemPosition: Int ->
+            if (noteViewModel.isOnSelectMode.value == true && !note.selected) {
+                note.selected = true
+                adapter.notifyItemChanged(itemPosition)
+            } else if (noteViewModel.isOnSelectMode.value == true && note.selected) {
+                note.selected = false
+                noteViewModel.checkIfStillOnSelectMode()
+                adapter.notifyItemChanged(itemPosition)
+            } else {
+                val dialog = NoteDialogFragment()
+                dialog.show(requireActivity().supportFragmentManager, NoteDialogFragment.NOTE_DIALOG_FRAGMENT_TAG)
+
+                noteViewModel.setOpenExistingNote(note)
+            }
         }
     }
 
     private fun observeSelectMode() {
-        noteViewModel.isOnSelectMode.observe(this) {
+        noteViewModel.isOnSelectMode.observe(viewLifecycleOwner) {
             if (it) {
                 binding.addNewNoteBtn.hide()
                 binding.removeNoteBtn.show()

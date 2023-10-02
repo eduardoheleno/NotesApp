@@ -96,6 +96,11 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
     fun delete(note: Note) = viewModelScope.launch {
         repository.delete(note)
     }
+
+//    Debug functions
+    fun insertMultipleRegistersDebug() = viewModelScope.launch {
+        repository.insertMultipleDebugRegisters()
+}
 }
 
 class NoteViewModelFactory(private val repository: NoteRepository) : ViewModelProvider.Factory {

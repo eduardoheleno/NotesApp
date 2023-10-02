@@ -12,23 +12,28 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.notesapp.R
 import com.example.notesapp.room.Note
 
-class NoteListAdapter(private val callbackInterface: CallbackInterface) : ListAdapter<Note, NoteListAdapter.NoteViewHolder>(NotesComparator()) {
+class NoteListAdapter() : ListAdapter<Note, NoteListAdapter.NoteViewHolder>(NotesComparator()) {
+    private var notes: List<Note> = emptyList()
+
+    var onItemClick: ((note: Note, itemPosition: Int) -> Unit)? = null
+    var onLongItemClick: ((note: Note, itemPosition: Int) -> Unit)? = null
+
+    override fun onCurrentListChanged(
+        previousList: MutableList<Note>,
+        currentList: MutableList<Note>
+    ) {
+        notes = currentList
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
-        return NoteViewHolder.create(parent)
+        val view: View = LayoutInflater.from(parent.context)
+            .inflate(R.layout.note_list_item, parent, false)
+        return NoteViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
-        val current = getItem(position)
-
-        holder.noteContainerItemView.setOnLongClickListener {
-            current.selected = true
-            notifyItemChanged(position)
-            callbackInterface.setIsOnSelectMode()
-
-            true
-        }
-
-        holder.bind(current, position, callbackInterface)
+        val note = notes[position]
+        holder.bind(note)
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -36,15 +41,26 @@ class NoteListAdapter(private val callbackInterface: CallbackInterface) : ListAd
     }
 
     override fun getItemId(position: Int): Long {
-        return position.toLong()
+        return getItem(position).id.toLong()
     }
 
-    class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val noteContainerItemView: LinearLayout = itemView.findViewById(R.id.noteContainer)
+    inner class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val noteContainerItemView: LinearLayout = itemView.findViewById(R.id.noteContainer)
         private val noteTitleItemView: TextView = itemView.findViewById(R.id.noteTitle)
         private val noteContentItemView: TextView = itemView.findViewById(R.id.noteContent)
 
-        fun bind(note: Note, itemPosition: Int, callbackInterface: CallbackInterface) {
+        init {
+            noteContainerItemView.setOnClickListener {
+                onItemClick?.invoke(notes[adapterPosition], adapterPosition)
+            }
+
+            noteContainerItemView.setOnLongClickListener {
+                onLongItemClick?.invoke(notes[adapterPosition], adapterPosition)
+                true
+            }
+        }
+
+        fun bind(note: Note) {
             noteTitleItemView.text = note.title
             noteContentItemView.text = note.content
 
@@ -53,33 +69,16 @@ class NoteListAdapter(private val callbackInterface: CallbackInterface) : ListAd
             } else {
                 noteContainerItemView.setBackgroundResource(R.drawable.note_list_item_shape)
             }
-
-            noteContainerItemView.setOnClickListener {
-                callbackInterface.onClickNote(note, itemPosition)
-            }
-        }
-
-        companion object {
-            fun create(parent: ViewGroup): NoteViewHolder {
-                val view: View = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.note_list_item, parent, false)
-                return NoteViewHolder(view)
-            }
         }
     }
+}
 
-    class NotesComparator : DiffUtil.ItemCallback<Note>() {
-        override fun areItemsTheSame(oldItem: Note, newItem: Note): Boolean {
-            return oldItem.id == newItem.id
-        }
-
-        override fun areContentsTheSame(oldItem: Note, newItem: Note): Boolean {
-            return oldItem.content == newItem.content
-        }
+class NotesComparator : DiffUtil.ItemCallback<Note>() {
+    override fun areItemsTheSame(oldItem: Note, newItem: Note): Boolean {
+        return oldItem == newItem
     }
 
-    interface CallbackInterface {
-        fun onClickNote(note: Note, itemPosition: Int)
-        fun setIsOnSelectMode()
+    override fun areContentsTheSame(oldItem: Note, newItem: Note): Boolean {
+        return oldItem.id == newItem.id
     }
 }

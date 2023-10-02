@@ -40,6 +40,16 @@
             app:layout_anchor="@+id/addNewNoteBtn"
             app:layout_anchorGravity="center"
             app:srcCompat="@drawable/baseline_delete_24" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/debugButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:clickable="true"
+            app:layout_anchor="@+id/notes_list_fragment"
+            app:layout_anchorGravity="start|bottom"
+            app:srcCompat="@drawable/ic_launcher_foreground" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </layout>

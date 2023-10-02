@@ -21,4 +21,13 @@ class NoteRepository(private val noteDao: NoteDao) {
     suspend fun delete(note: Note) {
         noteDao.delete(note)
     }
+
+//    Debug functions
+
+    suspend fun insertMultipleDebugRegisters() {
+        for (i in 1..10) {
+            val note = Note("title$i", "content$i")
+            noteDao.insertOrUpdate(note)
+        }
+    }
 }
