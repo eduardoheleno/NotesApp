@@ -1,11 +1,15 @@
 package com.example.notesapp.adapters
 
 import android.graphics.Color
+import android.graphics.ColorFilter
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -67,7 +71,12 @@ class NoteListAdapter() : ListAdapter<Note, NoteListAdapter.NoteViewHolder>(Note
             if (note.selected) {
                 noteContainerItemView.setBackgroundColor(Color.GRAY)
             } else {
-                noteContainerItemView.setBackgroundResource(R.drawable.note_list_item_shape)
+                val drawable = ContextCompat.getDrawable(noteContainerItemView.context, R.drawable.note_list_item_shape)
+                val color = Color.parseColor(note.color)
+                val colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
+                drawable?.colorFilter = colorFilter
+
+                noteContainerItemView.background = drawable
             }
         }
     }

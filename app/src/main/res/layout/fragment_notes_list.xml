@@ -26,8 +26,11 @@
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:clickable="true"
+            app:backgroundTint="#1F2937"
+            app:tint="@color/white"
             app:layout_anchor="@+id/notes_list_fragment"
             app:layout_anchorGravity="end|bottom"
+            app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
             app:srcCompat="@drawable/baseline_add_24" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -36,6 +39,7 @@
             android:layout_height="wrap_content"
             android:clickable="true"
             android:visibility="gone"
+            app:tint="@color/white"
             app:backgroundTint="@android:color/holo_red_light"
             app:layout_anchor="@+id/addNewNoteBtn"
             app:layout_anchorGravity="center"

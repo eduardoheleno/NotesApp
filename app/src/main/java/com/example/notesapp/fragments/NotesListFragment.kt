@@ -36,7 +36,24 @@ class NotesListFragment : Fragment() {
 
         observeSelectMode()
         initAdapter()
+        initClickListeners()
 
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            @SuppressLint("NotifyDataSetChanged")
+            override fun handleOnBackPressed() {
+                if (noteViewModel.isOnSelectMode.value == true) {
+                    noteViewModel.exitSelectMode()
+                    adapter.notifyDataSetChanged()
+                } else {
+                    requireActivity().finish()
+                }
+            }
+        })
+
+        return binding.root
+    }
+
+    private fun initClickListeners() {
         binding.addNewNoteBtn.setOnClickListener {
             val dialog = NoteDialogFragment()
             dialog.show(requireActivity().supportFragmentManager, NoteDialogFragment.NOTE_DIALOG_FRAGMENT_TAG)
@@ -53,20 +70,6 @@ class NotesListFragment : Fragment() {
         binding.debugButton.setOnClickListener {
             noteViewModel.insertMultipleRegistersDebug()
         }
-
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            @SuppressLint("NotifyDataSetChanged")
-            override fun handleOnBackPressed() {
-                if (noteViewModel.isOnSelectMode.value == true) {
-                    noteViewModel.exitSelectMode()
-                    adapter.notifyDataSetChanged()
-                } else {
-                    requireActivity().finish()
-                }
-            }
-        })
-
-        return binding.root
     }
 
     private fun initAdapter() {

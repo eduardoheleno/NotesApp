@@ -35,7 +35,6 @@ class NoteDialogFragment : DialogFragment() {
             .setView(binding.root)
             .create()
 
-        dialog.setCanceledOnTouchOutside(false)
         dialog.window?.let {
             it.attributes.windowAnimations = R.style.DialogAnimation
             it.setGravity(Gravity.BOTTOM)
@@ -52,7 +51,7 @@ class NoteDialogFragment : DialogFragment() {
         val noteContent = binding.editNoteContentText.text.toString()
 
         if (noteTitle.isNotEmpty() && noteContent.isNotEmpty() && noteViewModel.currentNote.value == null) {
-            val note = Note(noteTitle, noteContent)
+            val note = Note(noteTitle, noteContent, Note.Colors.values().random().colorCode)
             noteViewModel.insert(note)
         }
     }
