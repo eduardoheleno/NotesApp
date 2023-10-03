@@ -37,12 +37,6 @@ class NotesListFragment : Fragment() {
         observeSelectMode()
         initAdapter()
 
-        noteViewModel.allNotes.observe(viewLifecycleOwner) {
-            it?.let {
-                adapter.submitList(it)
-            }
-        }
-
         binding.addNewNoteBtn.setOnClickListener {
             val dialog = NoteDialogFragment()
             dialog.show(requireActivity().supportFragmentManager, NoteDialogFragment.NOTE_DIALOG_FRAGMENT_TAG)
@@ -52,8 +46,6 @@ class NotesListFragment : Fragment() {
 
         binding.removeNoteBtn.setOnClickListener {
             noteViewModel.getSelectedNoteIds()?.let {
-                println(it)
-
                 noteViewModel.deleteMultipleNotesById(it)
             }
         }
@@ -84,7 +76,7 @@ class NotesListFragment : Fragment() {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
 
-        noteViewModel.allNotes.observe(viewLifecycleOwner) {
+        noteViewModel.filteredNotes.observe(viewLifecycleOwner) {
             it?.let {
                 adapter.submitList(it)
             }

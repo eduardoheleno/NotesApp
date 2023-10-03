@@ -9,7 +9,11 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface NoteDao {
     @Query("SELECT * FROM note ORDER BY id DESC")
-    fun getAllWords(): Flow<List<Note>>
+    fun getAllNotes(): Flow<List<Note>>
+
+    @Query("SELECT * FROM note WHERE title LIKE '%' || :searchParam || '%'")
+    fun getFilteredNotes(searchParam: String): Flow<List<Note>>
+
     @Upsert
     suspend fun insertOrUpdate(note: Note)
 

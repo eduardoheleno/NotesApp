@@ -8,10 +8,27 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.notesapp.room.Note
 import com.example.notesapp.room.NoteRepository
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 
 class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
-    val allNotes: LiveData<List<Note>> = repository.allNotes.asLiveData()
+    val searchParam = MutableStateFlow("")
+
+    @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
+    val filteredNotes: LiveData<List<Note>> = searchParam
+        .debounce(300)
+        .flatMapLatest {
+            if (it.isNotBlank()) {
+                repository.getFilteredNotes(it)
+            } else {
+                repository.getAllNotes()
+            }
+        }
+        .asLiveData()
 
     private val _currentNote = MutableLiveData<Note?>()
     val currentNoteTitle = MutableLiveData<String>()
@@ -62,14 +79,14 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
     }
 
     fun checkIfStillOnSelectMode() {
-        val selectedNotes = allNotes.value?.filter { it.selected }
+        val selectedNotes = filteredNotes.value?.filter { it.selected }
         if (selectedNotes?.isEmpty() == true) {
             _isOnSelectMode.value = false
         }
     }
 
     fun exitSelectMode() {
-        allNotes.value?.forEach {
+        filteredNotes.value?.forEach {
             it.selected = false
         }
 
@@ -81,7 +98,7 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
     }
 
     fun getSelectedNoteIds(): List<Int>? {
-        allNotes.value?.let { notes ->
+        filteredNotes.value?.let { notes ->
             return notes.filter { it.selected }.map { note -> note.id }
         }
 
@@ -100,7 +117,7 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
 //    Debug functions
     fun insertMultipleRegistersDebug() = viewModelScope.launch {
         repository.insertMultipleDebugRegisters()
-}
+    }
 }
 
 class NoteViewModelFactory(private val repository: NoteRepository) : ViewModelProvider.Factory {

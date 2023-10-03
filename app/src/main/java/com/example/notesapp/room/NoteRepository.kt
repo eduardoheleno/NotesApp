@@ -1,11 +1,16 @@
 package com.example.notesapp.room
 
 import androidx.annotation.WorkerThread
-import androidx.lifecycle.asLiveData
 import kotlinx.coroutines.flow.Flow
 
 class NoteRepository(private val noteDao: NoteDao) {
-   val allNotes: Flow<List<Note>>  = noteDao.getAllWords()
+    fun getAllNotes(): Flow<List<Note>> {
+        return noteDao.getAllNotes()
+    }
+
+    fun getFilteredNotes(searchParam: String): Flow<List<Note>> {
+        return noteDao.getFilteredNotes(searchParam)
+    }
 
     @WorkerThread
     suspend fun insertOrUpdate(note: Note) {
