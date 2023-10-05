@@ -2,6 +2,10 @@ package com.example.notesapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Gravity
+import android.view.View
+import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import com.example.notesapp.databinding.ActivityMainBinding
@@ -21,5 +25,25 @@ class MainActivity : AppCompatActivity() {
 
         binding.noteViewModel = noteViewModel
         binding.lifecycleOwner = this
+
+        binding.menuBtn.setOnClickListener { showPopupMenu(it) }
+    }
+
+    private fun showPopupMenu(view: View) {
+        val popupMenu = PopupMenu(this, view)
+
+        popupMenu.gravity = Gravity.END
+        popupMenu.inflate(R.menu.floating_popup_menu)
+        popupMenu.setOnMenuItemClickListener {
+            when(it.itemId) {
+                R.id.createTagItem -> {
+                    Toast.makeText(this, "Teste", Toast.LENGTH_LONG).show()
+                    true
+                }
+                else -> false
+            }
+        }
+
+        popupMenu.show()
     }
 }

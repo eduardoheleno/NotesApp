@@ -1,7 +1,6 @@
 package com.example.notesapp.adapters
 
 import android.graphics.Color
-import android.graphics.ColorFilter
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.view.LayoutInflater
