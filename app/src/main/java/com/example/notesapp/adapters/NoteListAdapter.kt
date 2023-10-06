@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.notesapp.R
-import com.example.notesapp.room.Note
+import com.example.notesapp.room.note.Note
 
 class NoteListAdapter() : ListAdapter<Note, NoteListAdapter.NoteViewHolder>(NotesComparator()) {
     private var notes: List<Note> = emptyList()

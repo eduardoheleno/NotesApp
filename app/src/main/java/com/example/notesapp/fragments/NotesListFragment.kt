@@ -11,7 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.notesapp.adapters.NoteListAdapter
 import com.example.notesapp.databinding.FragmentNotesListBinding
-import com.example.notesapp.room.Note
+import com.example.notesapp.room.note.Note
 import com.example.notesapp.room.NotesApplication
 import com.example.notesapp.viewmodels.NoteViewModel
 import com.example.notesapp.viewmodels.NoteViewModelFactory
@@ -23,7 +23,7 @@ import com.example.notesapp.viewmodels.NoteViewModelFactory
  */
 class NotesListFragment : Fragment() {
     private val noteViewModel: NoteViewModel by activityViewModels {
-        NoteViewModelFactory((activity?.application as NotesApplication).repository)
+        NoteViewModelFactory((activity?.application as NotesApplication).noteRepository)
     }
     private lateinit var binding: FragmentNotesListBinding
     private lateinit var adapter: NoteListAdapter

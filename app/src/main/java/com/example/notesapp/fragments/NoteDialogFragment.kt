@@ -13,14 +13,14 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.example.notesapp.R
 import com.example.notesapp.databinding.FragmentNoteDialogBinding
-import com.example.notesapp.room.Note
+import com.example.notesapp.room.note.Note
 import com.example.notesapp.room.NotesApplication
 import com.example.notesapp.viewmodels.NoteViewModel
 import com.example.notesapp.viewmodels.NoteViewModelFactory
 
 class NoteDialogFragment : DialogFragment() {
     private val noteViewModel: NoteViewModel by activityViewModels {
-        NoteViewModelFactory((activity?.application as NotesApplication).repository)
+        NoteViewModelFactory((activity?.application as NotesApplication).noteRepository)
     }
     private lateinit var binding: FragmentNoteDialogBinding
 
@@ -51,7 +51,7 @@ class NoteDialogFragment : DialogFragment() {
         val noteContent = binding.editNoteContentText.text.toString()
 
         if (noteTitle.isNotEmpty() && noteContent.isNotEmpty() && noteViewModel.currentNote.value == null) {
-            val note = Note(noteTitle, noteContent, Note.Colors.values().random().colorCode)
+            val note = Note(noteTitle, noteContent, Note.Colors.values().random().colorCode, null)
             noteViewModel.insert(note)
         }
     }

@@ -1,4 +1,4 @@
-package com.example.notesapp.room
+package com.example.notesapp.room.note
 
 import androidx.annotation.WorkerThread
 import kotlinx.coroutines.flow.Flow
@@ -31,7 +31,7 @@ class NoteRepository(private val noteDao: NoteDao) {
 
     suspend fun insertMultipleDebugRegisters() {
         for (i in 1..10) {
-            val note = Note("title$i", "content$i", Note.Colors.values().random().colorCode)
+            val note = Note("title$i", "content$i", Note.Colors.values().random().colorCode, null)
             noteDao.insertOrUpdate(note)
         }
     }
