@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/note_dialog_shape">
+    android:background="@drawable/shape_note_dialog">
     <data>
         <import type="android.view.View"/>
         <variable
@@ -15,7 +15,7 @@
         tools:context=".fragments.NoteDialogFragment">
 
         <ScrollView
-            android:scrollbarThumbVertical="@drawable/scrollbar_shape"
+            android:scrollbarThumbVertical="@drawable/shape_scrollbar"
             android:layout_width="match_parent"
             android:layout_height="500dp"
             android:paddingLeft="20dp"
@@ -44,7 +44,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
                     android:layout_marginBottom="10dp"
-                    android:background="@drawable/note_dialog_shape"
+                    android:background="@drawable/shape_note_dialog"
                     android:ems="10"
                     android:hint="@string/title"
                     android:inputType="text"
@@ -66,7 +66,7 @@
                     android:id="@+id/editNoteContentText"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/note_dialog_shape"
+                    android:background="@drawable/shape_note_dialog"
                     android:ems="10"
                     android:gravity="start|top"
                     android:hint="@string/type_something"

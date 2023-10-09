@@ -31,7 +31,7 @@ class NoteRepository(private val noteDao: NoteDao) {
 
     suspend fun insertMultipleDebugRegisters() {
         for (i in 1..10) {
-            val note = Note("title$i", "content$i", Note.Colors.values().random().colorCode, null)
+            val note = Note("title$i", "content$i", null)
             noteDao.insertOrUpdate(note)
         }
     }

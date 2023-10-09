@@ -54,11 +54,11 @@ class NoteListAdapter() : ListAdapter<Note, NoteListAdapter.NoteViewHolder>(Note
 
         init {
             noteContainerItemView.setOnClickListener {
-                onItemClick?.invoke(notes[adapterPosition], adapterPosition)
+                onItemClick?.invoke(notes[absoluteAdapterPosition], absoluteAdapterPosition)
             }
 
             noteContainerItemView.setOnLongClickListener {
-                onLongItemClick?.invoke(notes[adapterPosition], adapterPosition)
+                onLongItemClick?.invoke(notes[absoluteAdapterPosition], absoluteAdapterPosition)
                 true
             }
         }
@@ -70,8 +70,8 @@ class NoteListAdapter() : ListAdapter<Note, NoteListAdapter.NoteViewHolder>(Note
             if (note.selected) {
                 noteContainerItemView.setBackgroundColor(Color.GRAY)
             } else {
-                val drawable = ContextCompat.getDrawable(noteContainerItemView.context, R.drawable.note_list_item_shape)
-                val color = Color.parseColor(note.color)
+                val drawable = ContextCompat.getDrawable(noteContainerItemView.context, R.drawable.shape_note_list_item)
+                val color = Color.parseColor("#D9E8FC")
                 val colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
                 drawable?.colorFilter = colorFilter
 

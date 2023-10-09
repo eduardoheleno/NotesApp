@@ -51,7 +51,7 @@ class NoteDialogFragment : DialogFragment() {
         val noteContent = binding.editNoteContentText.text.toString()
 
         if (noteTitle.isNotEmpty() && noteContent.isNotEmpty() && noteViewModel.currentNote.value == null) {
-            val note = Note(noteTitle, noteContent, Note.Colors.values().random().colorCode, null)
+            val note = Note(noteTitle, noteContent, null)
             noteViewModel.insert(note)
         }
     }

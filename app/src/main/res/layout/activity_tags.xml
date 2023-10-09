@@ -8,6 +8,7 @@
         tools:context=".activities.TagsActivity">
 
         <LinearLayout
+            android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -50,9 +51,21 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:listitem="@layout/tag_list_item"/>
+                tools:listitem="@layout/tag_list_item" />
 
         </LinearLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/addTagBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:clickable="true"
+            app:tint="@color/white"
+            app:backgroundTint="#1F2937"
+            app:layout_anchor="@+id/linearLayout2"
+            app:layout_anchorGravity="end|bottom"
+            app:srcCompat="@drawable/baseline_add_24" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

@@ -6,6 +6,7 @@ import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import com.example.notesapp.R
 import com.example.notesapp.databinding.ActivityTagsBinding
+import com.example.notesapp.fragments.TagDialogModalFragment
 import com.example.notesapp.room.NotesApplication
 import com.example.notesapp.viewmodels.TagViewModel
 import com.example.notesapp.viewmodels.TagViewModelFactory
@@ -21,5 +22,9 @@ class TagsActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_tags)
 
         binding.backBtn.setOnClickListener { finish() }
+        binding.addTagBtn.setOnClickListener {
+            val tagModal = TagDialogModalFragment(TagDialogModalFragment.DialogMode.CREATE)
+            tagModal.show(supportFragmentManager, TagDialogModalFragment.TAG_DIALOG_FRAGMENT_TAG)
+        }
     }
 }

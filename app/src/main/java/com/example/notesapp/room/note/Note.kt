@@ -22,17 +22,8 @@ import com.example.notesapp.room.tag.Tag
 data class Note(
     @ColumnInfo val title: String,
     @ColumnInfo val content: String,
-    @ColumnInfo val color: String,
     @ColumnInfo val tagId: Int?,
     @PrimaryKey(autoGenerate = true) val id: Int = 0
 ) {
     @Ignore var selected: Boolean = false
-
-    enum class Colors(val colorCode: String) {
-        BLUE("#D9E8FC"),
-        YELLOW("#FDE99D"),
-        ORANGE("#FFEADD"),
-        PINK("#FFD8F4"),
-        GREEN("#B0E9CA")
-    }
 }
