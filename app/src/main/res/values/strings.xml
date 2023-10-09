@@ -13,4 +13,6 @@
     <string name="green">Green</string>
     <string name="tag">Tag</string>
     <string name="label">Label</string>
+    <string name="save">Save</string>
+    <string name="create">Create</string>
 </resources>

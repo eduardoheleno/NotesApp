@@ -5,14 +5,36 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.notesapp.room.tag.Tag
 import com.example.notesapp.room.tag.TagRepository
+import kotlinx.coroutines.launch
 
 class TagViewModel(private val tagRepository: TagRepository) : ViewModel() {
     val allTags: LiveData<List<Tag>> = tagRepository.getAllTags().asLiveData()
 
+    val tag = MutableLiveData<Tag?>()
     val tagLabel = MutableLiveData<String>()
     val tagColor = MutableLiveData<String>()
+
+    fun saveTag(tag: Tag?) = viewModelScope.launch {
+        if (tag != null) {
+            tagRepository.insertOrUpdate(tag)
+            return@launch
+        }
+
+        if (!tagLabel.value.isNullOrBlank()) {
+            var color = tagColor.value
+            if (color.isNullOrEmpty()) {
+                color = Tag.Colors.BLUE.colorCode
+            }
+
+            val newTag = Tag(tagLabel.value.toString(), color.toString())
+            tagRepository.insertOrUpdate(newTag)
+
+            return@launch
+        }
+    }
 }
 
 class TagViewModelFactory(private val tagRepository: TagRepository) : ViewModelProvider.Factory {

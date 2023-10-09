@@ -46,7 +46,6 @@ class NoteDialogFragment : DialogFragment() {
     }
 
     override fun onDismiss(dialog: DialogInterface) {
-        super.onDismiss(dialog)
         val noteTitle = binding.editNoteTitleText.text.toString()
         val noteContent = binding.editNoteContentText.text.toString()
 
@@ -54,6 +53,8 @@ class NoteDialogFragment : DialogFragment() {
             val note = Note(noteTitle, noteContent, null)
             noteViewModel.insert(note)
         }
+
+        super.onDismiss(dialog)
     }
 
     companion object {

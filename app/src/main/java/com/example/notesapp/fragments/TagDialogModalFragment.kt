@@ -1,5 +1,6 @@
 package com.example.notesapp.fragments
 
+import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
@@ -23,7 +24,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
  * Use the [TagDialogModalFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class TagDialogModalFragment(private val dialogMode: DialogMode) : BottomSheetDialogFragment() {
+class TagDialogModalFragment : BottomSheetDialogFragment() {
     private val tagViewModel: TagViewModel by activityViewModels {
         TagViewModelFactory((activity?.application as NotesApplication).tagRepository)
     }
@@ -36,8 +37,37 @@ class TagDialogModalFragment(private val dialogMode: DialogMode) : BottomSheetDi
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_tag_dialog_modal, container, false)
 
-        binding.tagModalActBtn.text = dialogMode.textLabel
+        initBtnText()
+        initObservers()
+        initColorPicker()
 
+        return binding.root
+    }
+
+    private fun initBtnText() {
+        if (tagViewModel.tag.value != null) {
+            binding.tagModalActBtn.text = getString(R.string.save)
+        } else {
+            binding.tagModalActBtn.text = getString(R.string.create)
+        }
+
+        binding.tagModalActBtn.setOnClickListener { validateAndSaveTag() }
+    }
+
+    private fun initObservers() {
+        binding.labelText.addTextChangedListener { tagViewModel.tagLabel.value = it.toString() }
+
+        tagViewModel.tag.observe(viewLifecycleOwner) {
+            it?.apply {
+                binding.labelText.setText(it.label)
+
+                binding.tagColor.setBackgroundColor(Color.parseColor(it.color))
+                tagViewModel.tagColor.value = it.color
+            }
+        }
+    }
+
+    private fun initColorPicker() {
         binding.tagColor.setOnClickListener { it ->
             val popMenu = PopupMenu(requireContext(), it)
 
@@ -83,25 +113,37 @@ class TagDialogModalFragment(private val dialogMode: DialogMode) : BottomSheetDi
                     false
                 }
             }
+
             popMenu.show()
         }
+    }
 
-        binding.labelText.addTextChangedListener { tagViewModel.tagLabel.value = it.toString() }
-
-        binding.tagModalActBtn.setOnClickListener {
-            println(tagViewModel.tagLabel.value)
-            println(tagViewModel.tagColor.value)
+    private fun validateAndSaveTag() {
+        if (tagViewModel.tagLabel.value.isNullOrBlank()) {
+            binding.labelText.error = "Required field!"
+            return
         }
 
-        return binding.root
+        tagViewModel.tag.value?.apply {
+            val tag = Tag(
+                tagViewModel.tagLabel.value.toString(),
+                tagViewModel.tagColor.value.toString(),
+                this.id
+            )
+            tagViewModel.saveTag(tag)
+
+            return
+        }
+
+        tagViewModel.saveTag(null)
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        tagViewModel.tag.value = null
+        super.onDismiss(dialog)
     }
 
     companion object {
         const val TAG_DIALOG_FRAGMENT_TAG = "TAG_DIALOG_FRAGMENT_TAG"
-    }
-
-    enum class DialogMode(val textLabel: String) {
-        CREATE("Create"),
-        EDIT("Edit")
     }
 }

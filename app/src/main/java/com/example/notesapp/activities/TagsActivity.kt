@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.notesapp.R
+import com.example.notesapp.adapters.TagListAdapter
 import com.example.notesapp.databinding.ActivityTagsBinding
 import com.example.notesapp.fragments.TagDialogModalFragment
 import com.example.notesapp.room.NotesApplication
@@ -21,9 +23,21 @@ class TagsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_tags)
 
+        val recyclerView = binding.tagsRecyclerView
+        val adapter = TagListAdapter()
+
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
+        tagViewModel.allTags.observe(this) {
+            it?.let {
+                adapter.submitList(it)
+            }
+        }
+
         binding.backBtn.setOnClickListener { finish() }
         binding.addTagBtn.setOnClickListener {
-            val tagModal = TagDialogModalFragment(TagDialogModalFragment.DialogMode.CREATE)
+            val tagModal = TagDialogModalFragment()
             tagModal.show(supportFragmentManager, TagDialogModalFragment.TAG_DIALOG_FRAGMENT_TAG)
         }
     }
