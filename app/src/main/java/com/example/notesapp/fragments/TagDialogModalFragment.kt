@@ -37,6 +37,9 @@ class TagDialogModalFragment : BottomSheetDialogFragment() {
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_tag_dialog_modal, container, false)
 
+        binding.tagViewModel = tagViewModel
+        binding.lifecycleOwner = requireActivity()
+
         initBtnText()
         initObservers()
         initColorPicker()
@@ -55,8 +58,6 @@ class TagDialogModalFragment : BottomSheetDialogFragment() {
     }
 
     private fun initObservers() {
-        binding.labelText.addTextChangedListener { tagViewModel.tagLabel.value = it.toString() }
-
         tagViewModel.tag.observe(viewLifecycleOwner) {
             it?.apply {
                 binding.labelText.setText(it.label)

@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.notesapp.R
 import com.example.notesapp.room.tag.Tag
 
-class TagListAdapter() : ListAdapter<Tag, TagListAdapter.TagViewHolder>(TagComparator()) {
+class TagListAdapter : ListAdapter<Tag, TagListAdapter.TagViewHolder>(TagComparator()) {
     private var tags: List<Tag> = emptyList()
 
     var onItemClick: ((tag: Tag, itemPosition: Int) -> Unit)? = null
@@ -32,7 +32,7 @@ class TagListAdapter() : ListAdapter<Tag, TagListAdapter.TagViewHolder>(TagCompa
     }
 
     override fun onBindViewHolder(holder: TagViewHolder, position: Int) {
-        val tag = getItem(position)
+        val tag = tags[position]
         holder.bind(tag)
     }
 
