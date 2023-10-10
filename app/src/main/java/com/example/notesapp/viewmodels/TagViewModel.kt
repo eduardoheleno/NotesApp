@@ -35,6 +35,10 @@ class TagViewModel(private val tagRepository: TagRepository) : ViewModel() {
             return@launch
         }
     }
+
+    fun deleteTag(tag: Tag) = viewModelScope.launch {
+        tagRepository.delete(tag)
+    }
 }
 
 class TagViewModelFactory(private val tagRepository: TagRepository) : ViewModelProvider.Factory {
