@@ -56,7 +56,7 @@
             android:layout_marginRight="15dp"
             app:layout_anchor="@+id/linearLayout"
             app:layout_anchorGravity="end|top"
-            android:background="@drawable/circular_ripple"
+            android:background="@drawable/ripple_circular"
             android:clickable="true"
             android:focusable="true"
             android:padding="5dp"

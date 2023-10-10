@@ -1,5 +1,6 @@
 package com.example.notesapp.adapters
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,18 @@ import com.example.notesapp.R
 import com.example.notesapp.room.tag.Tag
 
 class TagListAdapter() : ListAdapter<Tag, TagListAdapter.TagViewHolder>(TagComparator()) {
+    private var tags: List<Tag> = emptyList()
+
+    var onItemClick: ((tag: Tag, itemPosition: Int) -> Unit)? = null
+
+    override fun onCurrentListChanged(
+        previousList: MutableList<Tag>,
+        currentList: MutableList<Tag>
+    ) {
+        tags = currentList
+        super.onCurrentListChanged(previousList, currentList)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TagViewHolder {
         val view: View = LayoutInflater.from(parent.context)
             .inflate(R.layout.tag_list_item, parent, false)
@@ -27,7 +40,14 @@ class TagListAdapter() : ListAdapter<Tag, TagListAdapter.TagViewHolder>(TagCompa
         private val tagContainerItemView: LinearLayout = itemView.findViewById(R.id.tagContainer)
         private val tagLabel: TextView = itemView.findViewById(R.id.tagLabel)
 
+        init {
+            tagContainerItemView.setOnClickListener {
+                onItemClick?.invoke(tags[absoluteAdapterPosition], absoluteAdapterPosition)
+            }
+        }
+
         fun bind(tag: Tag) {
+            tagContainerItemView.setBackgroundColor(Color.parseColor(tag.color))
             tagLabel.text = tag.label
         }
     }

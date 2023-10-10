@@ -10,6 +10,7 @@ import com.example.notesapp.adapters.TagListAdapter
 import com.example.notesapp.databinding.ActivityTagsBinding
 import com.example.notesapp.fragments.TagDialogModalFragment
 import com.example.notesapp.room.NotesApplication
+import com.example.notesapp.room.tag.Tag
 import com.example.notesapp.viewmodels.TagViewModel
 import com.example.notesapp.viewmodels.TagViewModelFactory
 
@@ -33,6 +34,12 @@ class TagsActivity : AppCompatActivity() {
             it?.let {
                 adapter.submitList(it)
             }
+        }
+
+        adapter.onItemClick = { tag: Tag, itemPosition: Int ->
+            tagViewModel.tag.value = tag
+            val tagModal = TagDialogModalFragment()
+            tagModal.show(supportFragmentManager, TagDialogModalFragment.TAG_DIALOG_FRAGMENT_TAG)
         }
 
         binding.backBtn.setOnClickListener { finish() }

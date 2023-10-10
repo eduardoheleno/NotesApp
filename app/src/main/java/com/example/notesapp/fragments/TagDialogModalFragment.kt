@@ -131,11 +131,13 @@ class TagDialogModalFragment : BottomSheetDialogFragment() {
                 this.id
             )
             tagViewModel.saveTag(tag)
+            dismiss()
 
             return
         }
 
         tagViewModel.saveTag(null)
+        dismiss()
     }
 
     override fun onDismiss(dialog: DialogInterface) {

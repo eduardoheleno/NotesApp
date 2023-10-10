@@ -26,6 +26,7 @@ class NoteListAdapter() : ListAdapter<Note, NoteListAdapter.NoteViewHolder>(Note
         currentList: MutableList<Note>
     ) {
         notes = currentList
+        super.onCurrentListChanged(previousList, currentList)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {

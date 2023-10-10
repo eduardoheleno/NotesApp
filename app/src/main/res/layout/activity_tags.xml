@@ -21,9 +21,9 @@
                     android:id="@+id/backBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="24dp"
-                    android:background="@drawable/circular_ripple"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/ripple_circular"
                     android:clickable="true"
                     android:focusable="true"
                     android:padding="5dp"
@@ -42,7 +42,7 @@
                     android:textSize="24sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintHorizontal_bias="0.07"
                     app:layout_constraintStart_toEndOf="@+id/backBtn"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -50,6 +50,7 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/tagsRecyclerView"
+                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:listitem="@layout/tag_list_item" />
