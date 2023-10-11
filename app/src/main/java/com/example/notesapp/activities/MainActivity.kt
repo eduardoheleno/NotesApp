@@ -6,15 +6,16 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import android.widget.PopupMenu
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.notesapp.R
 import com.example.notesapp.adapters.TagFilterAdapter
+import com.example.notesapp.adapters.TagFilterAdapterDecoration
 import com.example.notesapp.databinding.ActivityMainBinding
 import com.example.notesapp.room.NotesApplication
+import com.example.notesapp.room.tag.Tag
 import com.example.notesapp.viewmodels.NoteViewModel
 import com.example.notesapp.viewmodels.NoteViewModelFactory
 import com.example.notesapp.viewmodels.TagViewModel
@@ -49,12 +50,30 @@ class MainActivity : AppCompatActivity() {
         adapter = TagFilterAdapter()
 
         recyclerView.adapter = adapter
+        recyclerView.addItemDecoration(TagFilterAdapterDecoration(this))
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+
+        val staticAllFilter = Tag("All", null)
+        staticAllFilter.isStaticAllFilter = true
+        staticAllFilter.selected = true
 
         tagViewModel.allTags.observe(this) {
             it?.let {
-                adapter.submitList(it)
+                val mutableList = it.toMutableList()
+                mutableList.add(0, staticAllFilter)
+
+                adapter.submitList(mutableList)
             }
+        }
+
+        adapter.onItemClick = { tag: Tag, itemPosition: Int ->
+            val index = adapter.currentList.indexOfFirst { it.selected }
+
+            adapter.currentList.elementAt(index).selected = false
+            adapter.notifyItemChanged(index)
+
+            adapter.currentList.elementAt(itemPosition).selected = true
+            adapter.notifyItemChanged(itemPosition)
         }
     }
 

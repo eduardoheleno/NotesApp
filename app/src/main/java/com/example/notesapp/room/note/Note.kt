@@ -22,7 +22,7 @@ import com.example.notesapp.room.tag.Tag
 data class Note(
     @ColumnInfo val title: String,
     @ColumnInfo val content: String,
-    @ColumnInfo val tagId: Int?,
+    @ColumnInfo(index = true) val tagId: Int?,
     @PrimaryKey(autoGenerate = true) val id: Int = 0
 ) {
     @Ignore var selected: Boolean = false

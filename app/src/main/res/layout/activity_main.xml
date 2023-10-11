@@ -43,8 +43,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/tagFilterRecyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp" />
+                android:layout_height="wrap_content" />
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/fragmentContainerView"
