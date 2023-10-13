@@ -11,7 +11,7 @@ interface NoteDao {
     @Query("SELECT * FROM note ORDER BY id DESC")
     fun getAllNotes(): Flow<List<Note>>
 
-    @Query("SELECT * FROM note WHERE title LIKE '%' || :searchParam || '%' OR content LIKE '%' || :searchParam || '%'")
+    @Query("SELECT * FROM note WHERE title LIKE '%' || :searchParam || '%' OR content LIKE '%' || :searchParam || '%' ORDER BY id DESC")
     fun getFilteredNotes(searchParam: String): Flow<List<Note>>
 
     @Upsert

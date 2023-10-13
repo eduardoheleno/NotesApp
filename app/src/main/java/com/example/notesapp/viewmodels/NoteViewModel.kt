@@ -8,6 +8,7 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.notesapp.room.note.Note
 import com.example.notesapp.room.note.NoteRepository
+import com.example.notesapp.room.tag.Tag
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,6 +34,8 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
     private val _currentNote = MutableLiveData<Note?>()
     val currentNoteTitle = MutableLiveData<String>()
     val currentNoteContent = MutableLiveData<String>()
+    val currentNoteTag = MutableLiveData<Tag?>()
+    val tagId = MutableLiveData<Int>()
 
     private val _isEditingNoteTitle = MutableLiveData<Boolean>()
     private val _isEditingNoteContent = MutableLiveData<Boolean>()
@@ -60,6 +63,7 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
         _currentNote.value = null
         currentNoteTitle.value = ""
         currentNoteContent.value = ""
+        currentNoteTag.value = null
 
         _isEditingNoteTitle.value = true
         _isEditingNoteContent.value = true

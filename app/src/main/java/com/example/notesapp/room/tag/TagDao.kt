@@ -11,6 +11,9 @@ interface TagDao {
     @Query("SELECT * FROM tag ORDER BY id DESC")
     fun getAllTags(): Flow<List<Tag>>
 
+    @Query("SELECT * FROM tag WHERE label LIKE '%' || :searchParam || '%' ORDER BY id DESC")
+    fun getFilteredTags(searchParam: String): Flow<List<Tag>>
+
     @Upsert
     suspend fun insertOrUpdate(tag: Tag)
 

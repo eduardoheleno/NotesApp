@@ -31,6 +31,20 @@ class NoteDialogFragment : DialogFragment() {
         binding.noteViewModel = noteViewModel
         binding.lifecycleOwner = this
 
+        binding.tagSearchBtn.setOnClickListener {
+            TagSearchDialogFragment().show(requireActivity().supportFragmentManager, TagSearchDialogFragment.TAG_SEARCH_DIALOG_FRAGMENT)
+        }
+
+        noteViewModel.currentNoteTag.observe(requireActivity()) {
+            if (it != null) {
+                noteViewModel.tagId.value = it.id
+                binding.tagLabelSelected.text = it.label
+            } else {
+                noteViewModel.tagId.value = null
+                binding.tagLabelSelected.text = ""
+            }
+        }
+
         val dialog = AlertDialog.Builder(requireContext())
             .setView(binding.root)
             .create()
@@ -48,9 +62,10 @@ class NoteDialogFragment : DialogFragment() {
     override fun onDismiss(dialog: DialogInterface) {
         val noteTitle = binding.editNoteTitleText.text.toString()
         val noteContent = binding.editNoteContentText.text.toString()
+        val noteTagId = noteViewModel.tagId.value
 
         if (noteTitle.isNotEmpty() && noteContent.isNotEmpty() && noteViewModel.currentNote.value == null) {
-            val note = Note(noteTitle, noteContent, null)
+            val note = Note(noteTitle, noteContent, noteTagId)
             noteViewModel.insert(note)
         }
 

@@ -8,9 +8,28 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.notesapp.room.tag.Tag
 import com.example.notesapp.room.tag.TagRepository
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 
 class TagViewModel(private val tagRepository: TagRepository) : ViewModel() {
+    val searchParam = MutableStateFlow("")
+
+    @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
+    val filteredTags: LiveData<List<Tag>> = searchParam
+        .debounce(300)
+        .flatMapLatest {
+            if (it.isNotBlank()) {
+                tagRepository.getFilteredTags(it)
+            } else {
+                tagRepository.getAllTags()
+            }
+        }
+        .asLiveData()
+
     val allTags: LiveData<List<Tag>> = tagRepository.getAllTags().asLiveData()
 
     val tag = MutableLiveData<Tag?>()

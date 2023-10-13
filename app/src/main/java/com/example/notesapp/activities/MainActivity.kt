@@ -67,14 +67,18 @@ class MainActivity : AppCompatActivity() {
         }
 
         adapter.onItemClick = { tag: Tag, itemPosition: Int ->
-            val index = adapter.currentList.indexOfFirst { it.selected }
-
-            adapter.currentList.elementAt(index).selected = false
-            adapter.notifyItemChanged(index)
-
-            adapter.currentList.elementAt(itemPosition).selected = true
-            adapter.notifyItemChanged(itemPosition)
+            switchSelectedTag(itemPosition)
         }
+    }
+
+    private fun switchSelectedTag(itemPosition: Int) {
+        val index = adapter.currentList.indexOfFirst { it.selected }
+
+        adapter.currentList.elementAt(index).selected = false
+        adapter.notifyItemChanged(index)
+
+        adapter.currentList.elementAt(itemPosition).selected = true
+        adapter.notifyItemChanged(itemPosition)
     }
 
     private fun showPopupMenu(view: View) {

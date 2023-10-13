@@ -8,6 +8,10 @@ class TagRepository(private val tagDao: TagDao) {
         return tagDao.getAllTags()
     }
 
+    fun getFilteredTags(searchParam: String): Flow<List<Tag>> {
+        return tagDao.getFilteredTags(searchParam)
+    }
+
     @WorkerThread
     suspend fun insertOrUpdate(tag: Tag) {
         tagDao.insertOrUpdate(tag)

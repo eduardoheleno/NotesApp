@@ -15,4 +15,5 @@
     <string name="label">Label</string>
     <string name="save">Save</string>
     <string name="create">Create</string>
+    <string name="search_for_tags">Search for tags</string>
 </resources>

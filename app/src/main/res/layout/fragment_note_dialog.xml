@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/shape_note_dialog">
     <data>
@@ -13,70 +14,100 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:context=".fragments.NoteDialogFragment">
-
-        <ScrollView
-            android:scrollbarThumbVertical="@drawable/shape_scrollbar"
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
-            android:layout_height="500dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp">
+            android:layout_height="match_parent">
 
-            <LinearLayout
+            <ScrollView
+                android:id="@+id/scrollView2"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="500dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:scrollbarThumbVertical="@drawable/shape_scrollbar">
 
-                <TextView
-                    android:id="@+id/noteTitleText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginBottom="10dp"
-                    android:textColor="#181818"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:text="@{noteViewModel.currentNoteTitle}"
-                    android:visibility="@{noteViewModel.isEditingNoteTitle ? View.GONE : View.VISIBLE}" />
-
-                <EditText
-                    android:id="@+id/editNoteTitleText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="@drawable/shape_note_dialog"
-                    android:ems="10"
-                    android:hint="@string/title"
-                    android:inputType="text"
-                    android:text="@{noteViewModel.currentNoteTitle}"
-                    android:textColor="#181818"
-                    android:textStyle="bold"
-                    android:visibility="@{noteViewModel.isEditingNoteTitle ? View.VISIBLE : View.GONE}" />
-
-                <TextView
-                    android:id="@+id/noteContentText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:lineSpacingExtra="3dp"
-                    android:textColor="#292929"
-                    android:text="@{noteViewModel.currentNoteContent}"
-                    android:visibility="@{noteViewModel.isEditingNoteContent ? View.GONE : View.VISIBLE}" />
-
-                <EditText
-                    android:id="@+id/editNoteContentText"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/shape_note_dialog"
-                    android:ems="10"
-                    android:gravity="start|top"
-                    android:hint="@string/type_something"
-                    android:inputType="textMultiLine"
-                    android:text="@{noteViewModel.currentNoteContent}"
-                    android:textColor="#181818"
-                    android:visibility="@{noteViewModel.isEditingNoteContent ? View.VISIBLE : View.GONE}" />
+                    android:orientation="vertical">
 
+                    <TextView
+                        android:id="@+id/noteTitleText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="10dp"
+                        android:text="@{noteViewModel.currentNoteTitle}"
+                        android:textColor="#181818"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        android:visibility="@{noteViewModel.isEditingNoteTitle ? View.GONE : View.VISIBLE}" />
+
+                    <EditText
+                        android:id="@+id/editNoteTitleText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/shape_note_dialog"
+                        android:ems="10"
+                        android:hint="@string/title"
+                        android:inputType="text"
+                        android:text="@{noteViewModel.currentNoteTitle}"
+                        android:textColor="#181818"
+                        android:textStyle="bold"
+                        android:visibility="@{noteViewModel.isEditingNoteTitle ? View.VISIBLE : View.GONE}" />
+
+                    <TextView
+                        android:id="@+id/noteContentText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:lineSpacingExtra="3dp"
+                        android:text="@{noteViewModel.currentNoteContent}"
+                        android:textColor="#292929"
+                        android:visibility="@{noteViewModel.isEditingNoteContent ? View.GONE : View.VISIBLE}" />
+
+                    <EditText
+                        android:id="@+id/editNoteContentText"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/shape_note_dialog"
+                        android:ems="10"
+                        android:gravity="start|top"
+                        android:hint="@string/type_something"
+                        android:inputType="textMultiLine"
+                        android:text="@{noteViewModel.currentNoteContent}"
+                        android:textColor="#181818"
+                        android:visibility="@{noteViewModel.isEditingNoteContent ? View.VISIBLE : View.GONE}" />
+
+                </LinearLayout>
+            </ScrollView>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="15dp"
+                android:orientation="horizontal"
+                app:layout_anchor="@+id/scrollView2"
+                app:layout_anchorGravity="end|top">
+
+                <TextView
+                    android:id="@+id/tagLabelSelected"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="3dp" />
+
+                <ImageView
+                    android:id="@+id/tagSearchBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="3dp"
+                    android:background="@drawable/ripple_circular"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:src="@drawable/baseline_label_24" />
             </LinearLayout>
-        </ScrollView>
-
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </FrameLayout>
 </layout>

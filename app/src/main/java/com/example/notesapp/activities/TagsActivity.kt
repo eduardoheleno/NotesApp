@@ -152,8 +152,9 @@ class TagsActivity : AppCompatActivity() {
     private fun initClickListeners() {
         binding.backBtn.setOnClickListener { finish() }
         binding.addTagBtn.setOnClickListener {
-            val tagModal = TagDialogModalFragment()
-            tagModal.show(supportFragmentManager, TagDialogModalFragment.TAG_DIALOG_FRAGMENT_TAG)
+            tagViewModel.tagLabel.value = ""
+            tagViewModel.tagColor.value = ""
+            TagDialogModalFragment().show(supportFragmentManager, TagDialogModalFragment.TAG_DIALOG_FRAGMENT_TAG)
         }
     }
 }
