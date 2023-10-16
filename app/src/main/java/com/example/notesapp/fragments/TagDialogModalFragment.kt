@@ -79,10 +79,6 @@ class TagDialogModalFragment : BottomSheetDialogFragment() {
                 val colorString: String?
 
                 when(it.itemId) {
-                    R.id.tagColorBlue -> {
-                        colorString = Tag.Colors.BLUE.colorCode
-                        color = Color.parseColor(Tag.Colors.BLUE.colorCode)
-                    }
                     R.id.tagColorYellow -> {
                         colorString = Tag.Colors.YELLOW.colorCode
                         color = Color.parseColor(Tag.Colors.YELLOW.colorCode)

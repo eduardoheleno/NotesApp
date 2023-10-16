@@ -13,17 +13,18 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.notesapp.R
-import com.example.notesapp.room.note.Note
+import com.example.notesapp.room.NoteWithTag
+import com.example.notesapp.room.tag.Tag
 
-class NoteListAdapter() : ListAdapter<Note, NoteListAdapter.NoteViewHolder>(NotesComparator()) {
-    private var notes: List<Note> = emptyList()
+class NoteListAdapter : ListAdapter<NoteWithTag, NoteListAdapter.NoteViewHolder>(NotesComparator()) {
+    private var notes: List<NoteWithTag> = emptyList()
 
-    var onItemClick: ((note: Note, itemPosition: Int) -> Unit)? = null
-    var onLongItemClick: ((note: Note, itemPosition: Int) -> Unit)? = null
+    var onItemClick: ((note: NoteWithTag, itemPosition: Int) -> Unit)? = null
+    var onLongItemClick: ((note: NoteWithTag, itemPosition: Int) -> Unit)? = null
 
     override fun onCurrentListChanged(
-        previousList: MutableList<Note>,
-        currentList: MutableList<Note>
+        previousList: MutableList<NoteWithTag>,
+        currentList: MutableList<NoteWithTag>
     ) {
         notes = currentList
         super.onCurrentListChanged(previousList, currentList)
@@ -45,7 +46,7 @@ class NoteListAdapter() : ListAdapter<Note, NoteListAdapter.NoteViewHolder>(Note
     }
 
     override fun getItemId(position: Int): Long {
-        return getItem(position).id.toLong()
+        return getItem(position).note.id.toLong()
     }
 
     inner class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -64,30 +65,38 @@ class NoteListAdapter() : ListAdapter<Note, NoteListAdapter.NoteViewHolder>(Note
             }
         }
 
-        fun bind(note: Note) {
-            noteTitleItemView.text = note.title
-            noteContentItemView.text = note.content
+        fun bind(noteWithTag: NoteWithTag) {
+            noteTitleItemView.text = noteWithTag.note.title
+            noteContentItemView.text = noteWithTag.note.content
 
-            if (note.selected) {
+            if (noteWithTag.note.selected) {
                 noteContainerItemView.setBackgroundColor(Color.GRAY)
             } else {
                 val drawable = ContextCompat.getDrawable(noteContainerItemView.context, R.drawable.shape_note_list_item)
-                val color = Color.parseColor("#D9E8FC")
-                val colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
-                drawable?.colorFilter = colorFilter
+                val color: Int
+                val colorFilter: PorterDuffColorFilter
 
+                if (noteWithTag.tag?.color != null) {
+                    color = Color.parseColor(noteWithTag.tag.color)
+                    colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
+                } else {
+                    color = Color.parseColor(Tag.Colors.DEFAULT.colorCode)
+                    colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
+                }
+
+                drawable?.colorFilter = colorFilter
                 noteContainerItemView.background = drawable
             }
         }
     }
 }
 
-class NotesComparator : DiffUtil.ItemCallback<Note>() {
-    override fun areItemsTheSame(oldItem: Note, newItem: Note): Boolean {
+class NotesComparator : DiffUtil.ItemCallback<NoteWithTag>() {
+    override fun areItemsTheSame(oldItem: NoteWithTag, newItem: NoteWithTag): Boolean {
         return oldItem == newItem
     }
 
-    override fun areContentsTheSame(oldItem: Note, newItem: Note): Boolean {
-        return oldItem.id == newItem.id
+    override fun areContentsTheSame(oldItem: NoteWithTag, newItem: NoteWithTag): Boolean {
+        return oldItem.note.id == newItem.note.id
     }
 }

@@ -11,7 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.notesapp.adapters.NoteListAdapter
 import com.example.notesapp.databinding.FragmentNotesListBinding
-import com.example.notesapp.room.note.Note
+import com.example.notesapp.room.NoteWithTag
 import com.example.notesapp.room.NotesApplication
 import com.example.notesapp.viewmodels.NoteViewModel
 import com.example.notesapp.viewmodels.NoteViewModelFactory
@@ -83,25 +83,25 @@ class NotesListFragment : Fragment() {
             }
         }
 
-        adapter.onLongItemClick = { note: Note, itemPosition: Int ->
-            note.selected = true
+        adapter.onLongItemClick = { noteWithTag: NoteWithTag, itemPosition: Int ->
+            noteWithTag.note.selected = true
             noteViewModel.setIsOnSelectMode()
             adapter.notifyItemChanged(itemPosition)
         }
 
-        adapter.onItemClick = { note: Note, itemPosition: Int ->
-            if (noteViewModel.isOnSelectMode.value == true && !note.selected) {
-                note.selected = true
+        adapter.onItemClick = { noteWithTag: NoteWithTag, itemPosition: Int ->
+            if (noteViewModel.isOnSelectMode.value == true && !noteWithTag.note.selected) {
+                noteWithTag.note.selected = true
                 adapter.notifyItemChanged(itemPosition)
-            } else if (noteViewModel.isOnSelectMode.value == true && note.selected) {
-                note.selected = false
+            } else if (noteViewModel.isOnSelectMode.value == true && noteWithTag.note.selected) {
+                noteWithTag.note.selected = false
                 noteViewModel.checkIfStillOnSelectMode()
                 adapter.notifyItemChanged(itemPosition)
             } else {
                 val dialog = NoteDialogFragment()
                 dialog.show(requireActivity().supportFragmentManager, NoteDialogFragment.NOTE_DIALOG_FRAGMENT_TAG)
 
-                noteViewModel.setOpenExistingNote(note)
+                noteViewModel.setOpenExistingNote(noteWithTag)
             }
         }
     }

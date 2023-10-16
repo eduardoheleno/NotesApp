@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.notesapp.room.NoteWithTag
 import com.example.notesapp.room.note.Note
 import com.example.notesapp.room.note.NoteRepository
 import com.example.notesapp.room.tag.Tag
@@ -22,7 +23,7 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
     val tagIdParam = MutableStateFlow<Int?>(null)
 
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
-    val filteredNotes: LiveData<List<Note>> = combine(searchParam, tagIdParam) { search: String, tagId: Int? ->
+    val filteredNotes: LiveData<List<NoteWithTag>> = combine(searchParam, tagIdParam) { search: String, tagId: Int? ->
         Pair(search, tagId)
     }
         .debounce(300)
@@ -39,7 +40,7 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
         }
         .asLiveData()
 
-    private val _currentNote = MutableLiveData<Note?>()
+    private val _currentNote = MutableLiveData<NoteWithTag?>()
     val currentNoteTitle = MutableLiveData<String>()
     val currentNoteContent = MutableLiveData<String>()
     val currentNoteTag = MutableLiveData<Tag?>()
@@ -50,7 +51,7 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
 
     private val _isOnSelectMode = MutableLiveData<Boolean>()
 
-    val currentNote: LiveData<Note?>
+    val currentNote: LiveData<NoteWithTag?>
         get() = _currentNote
     val isEditingNoteTitle: LiveData<Boolean>
         get() = _isEditingNoteTitle
@@ -77,10 +78,10 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
         _isEditingNoteContent.value = true
     }
 
-    fun setOpenExistingNote(note: Note) {
-        _currentNote.value = note
-        currentNoteTitle.value = note.title
-        currentNoteContent.value = note.content
+    fun setOpenExistingNote(noteWithTag: NoteWithTag) {
+        _currentNote.value = noteWithTag
+        currentNoteTitle.value = noteWithTag.note.title
+        currentNoteContent.value = noteWithTag.note.content
 
         _isEditingNoteTitle.value = false
         _isEditingNoteContent.value = false
@@ -91,7 +92,7 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
     }
 
     fun checkIfStillOnSelectMode() {
-        val selectedNotes = filteredNotes.value?.filter { it.selected }
+        val selectedNotes = filteredNotes.value?.filter { it.note.selected }
         if (selectedNotes?.isEmpty() == true) {
             _isOnSelectMode.value = false
         }
@@ -99,7 +100,7 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
 
     fun exitSelectMode() {
         filteredNotes.value?.forEach {
-            it.selected = false
+            it.note.selected = false
         }
 
         _isOnSelectMode.value = false
@@ -110,8 +111,8 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
     }
 
     fun getSelectedNoteIds(): List<Int>? {
-        filteredNotes.value?.let { notes ->
-            return notes.filter { it.selected }.map { note -> note.id }
+        filteredNotes.value?.let {
+            return it.filter { list -> list.note.selected }.map { selectedList -> selectedList.note.id }
         }
 
         return null

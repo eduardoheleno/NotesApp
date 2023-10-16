@@ -15,7 +15,7 @@ data class Tag(
     @Ignore var selected: Boolean = false
 
     enum class Colors(val colorCode: String) {
-        BLUE("#D9E8FC"),
+        DEFAULT("#D9E8FC"),
         YELLOW("#FDE99D"),
         ORANGE("#FFEADD"),
         PINK("#FFD8F4"),

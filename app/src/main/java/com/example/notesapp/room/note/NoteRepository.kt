@@ -1,14 +1,15 @@
 package com.example.notesapp.room.note
 
 import androidx.annotation.WorkerThread
+import com.example.notesapp.room.NoteWithTag
 import kotlinx.coroutines.flow.Flow
 
 class NoteRepository(private val noteDao: NoteDao) {
-    fun getAllNotes(): Flow<List<Note>> {
+    fun getAllNotes(): Flow<List<NoteWithTag>> {
         return noteDao.getAllNotes()
     }
 
-    fun getFilteredNotes(searchParam: String?, tagId: Int?): Flow<List<Note>> {
+    fun getFilteredNotes(searchParam: String?, tagId: Int?): Flow<List<NoteWithTag>> {
         return noteDao.getFilteredNotes(searchParam, tagId)
     }
 

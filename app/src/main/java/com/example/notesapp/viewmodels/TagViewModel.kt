@@ -43,12 +43,7 @@ class TagViewModel(private val tagRepository: TagRepository) : ViewModel() {
         }
 
         if (!tagLabel.value.isNullOrBlank()) {
-            var color = tagColor.value
-            if (color.isNullOrEmpty()) {
-                color = Tag.Colors.BLUE.colorCode
-            }
-
-            val newTag = Tag(tagLabel.value.toString(), color.toString())
+            val newTag = Tag(tagLabel.value.toString(), tagColor.value)
             tagRepository.insertOrUpdate(newTag)
 
             return@launch

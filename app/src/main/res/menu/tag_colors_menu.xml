@@ -2,11 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/tagColorBlue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:title="@string/blue" />
-    <item
         android:id="@+id/tagColorYellow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
