@@ -12,19 +12,27 @@ import com.example.notesapp.room.tag.Tag
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 
 class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
     val searchParam = MutableStateFlow("")
+    val tagIdParam = MutableStateFlow<Int?>(null)
 
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
-    val filteredNotes: LiveData<List<Note>> = searchParam
+    val filteredNotes: LiveData<List<Note>> = combine(searchParam, tagIdParam) { search: String, tagId: Int? ->
+        Pair(search, tagId)
+    }
         .debounce(300)
-        .flatMapLatest {
-            if (it.isNotBlank()) {
-                repository.getFilteredNotes(it)
+        .flatMapLatest { (search, tagId) ->
+            if (search.isNotBlank() && tagId != null) {
+                repository.getFilteredNotes(search, tagId)
+            } else if (search.isNotBlank()) {
+                repository.getFilteredNotes(search, null)
+            } else if (tagId != null) {
+                repository.getFilteredNotes(null, tagId)
             } else {
                 repository.getAllNotes()
             }

@@ -8,8 +8,8 @@ class NoteRepository(private val noteDao: NoteDao) {
         return noteDao.getAllNotes()
     }
 
-    fun getFilteredNotes(searchParam: String): Flow<List<Note>> {
-        return noteDao.getFilteredNotes(searchParam)
+    fun getFilteredNotes(searchParam: String?, tagId: Int?): Flow<List<Note>> {
+        return noteDao.getFilteredNotes(searchParam, tagId)
     }
 
     @WorkerThread

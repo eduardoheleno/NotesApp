@@ -55,9 +55,7 @@ class NotesListFragment : Fragment() {
 
     private fun initClickListeners() {
         binding.addNewNoteBtn.setOnClickListener {
-            val dialog = NoteDialogFragment()
-            dialog.show(requireActivity().supportFragmentManager, NoteDialogFragment.NOTE_DIALOG_FRAGMENT_TAG)
-
+            NoteDialogFragment().show(requireActivity().supportFragmentManager, NoteDialogFragment.NOTE_DIALOG_FRAGMENT_TAG)
             noteViewModel.setEditingNewNote()
         }
 

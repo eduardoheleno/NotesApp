@@ -67,6 +67,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         adapter.onItemClick = { tag: Tag, itemPosition: Int ->
+            if (tag.id != 0) {
+                noteViewModel.tagIdParam.value = tag.id
+            } else {
+                noteViewModel.tagIdParam.value = null
+            }
+
             switchSelectedTag(itemPosition)
         }
     }
