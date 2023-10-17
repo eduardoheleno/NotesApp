@@ -44,7 +44,7 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
     val currentNoteTitle = MutableLiveData<String>()
     val currentNoteContent = MutableLiveData<String>()
     val currentNoteTag = MutableLiveData<Tag?>()
-    val tagId = MutableLiveData<Int>()
+    val tagId = MutableLiveData<Int?>()
 
     private val _isOnSelectMode = MutableLiveData<Boolean>()
 
@@ -69,7 +69,7 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
         _currentNote.value = noteWithTag
         currentNoteTitle.value = noteWithTag.note.title
         currentNoteContent.value = noteWithTag.note.content
-        tagId.value = noteWithTag.tag?.id
+        currentNoteTag.value = noteWithTag.tag
     }
 
     fun setIsOnSelectMode() {
