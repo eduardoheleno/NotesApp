@@ -51,6 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:clickable="true"
+            android:visibility="gone"
             app:layout_anchor="@+id/notes_list_fragment"
             app:layout_anchorGravity="start|bottom"
             app:srcCompat="@drawable/ic_launcher_foreground" />
