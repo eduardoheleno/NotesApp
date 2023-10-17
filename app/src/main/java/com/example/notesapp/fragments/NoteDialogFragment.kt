@@ -35,13 +35,19 @@ class NoteDialogFragment : DialogFragment() {
             TagSearchDialogFragment().show(requireActivity().supportFragmentManager, TagSearchDialogFragment.TAG_SEARCH_DIALOG_FRAGMENT)
         }
 
+        binding.removeTagBtn.setOnClickListener { noteViewModel.currentNoteTag.value = null }
+
         binding.tagLabelSelected.text = noteViewModel.currentNote.value?.tag?.label
 
         noteViewModel.currentNoteTag.observe(requireActivity()) {
             if (it != null) {
+                noteViewModel.showRemoveTagBtn.value = true
+
                 noteViewModel.tagId.value = it.id
                 binding.tagLabelSelected.text = it.label
             } else {
+                noteViewModel.showRemoveTagBtn.value = false
+
                 noteViewModel.tagId.value = null
                 binding.tagLabelSelected.text = ""
             }

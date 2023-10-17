@@ -61,6 +61,7 @@
             </ScrollView>
 
             <LinearLayout
+                android:id="@+id/linearLayout3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
@@ -79,12 +80,25 @@
                     android:id="@+id/tagSearchBtn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="3dp"
                     android:background="@drawable/ripple_circular"
                     android:clickable="true"
                     android:focusable="true"
+                    android:padding="3dp"
+                    android:visibility="@{noteViewModel.showRemoveTagBtn ? View.GONE : View.VISIBLE}"
                     android:src="@drawable/baseline_label_24" />
+
+                <ImageView
+                    android:id="@+id/removeTagBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ripple_circular"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="3dp"
+                    android:visibility="@{noteViewModel.showRemoveTagBtn ? View.VISIBLE : View.GONE}"
+                    app:srcCompat="@drawable/baseline_delete_dark_24" />
             </LinearLayout>
+
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </FrameLayout>
 </layout>

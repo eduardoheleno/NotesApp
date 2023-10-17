@@ -46,6 +46,8 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
     val currentNoteTag = MutableLiveData<Tag?>()
     val tagId = MutableLiveData<Int?>()
 
+    val showRemoveTagBtn = MutableLiveData(false)
+
     private val _isOnSelectMode = MutableLiveData<Boolean>()
 
     val currentNote: LiveData<NoteWithTag?>
