@@ -50,6 +50,9 @@ class NoteListAdapter : ListAdapter<NoteWithTag, NoteListAdapter.NoteViewHolder>
     }
 
     inner class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val maxQtdCharactersTitle = 20
+        private val maxQtdCharactersContent = 70
+
         private val noteContainerItemView: LinearLayout = itemView.findViewById(R.id.noteContainer)
         private val noteTitleItemView: TextView = itemView.findViewById(R.id.noteTitle)
         private val noteContentItemView: TextView = itemView.findViewById(R.id.noteContent)
@@ -65,9 +68,27 @@ class NoteListAdapter : ListAdapter<NoteWithTag, NoteListAdapter.NoteViewHolder>
             }
         }
 
+        private fun getShorterText(originalText: String, limiter: Int): String {
+            var shorterText = originalText.substring(0, limiter)
+            shorterText = "$shorterText..."
+
+            return shorterText
+        }
+
         fun bind(noteWithTag: NoteWithTag) {
-            noteTitleItemView.text = noteWithTag.note.title
-            noteContentItemView.text = noteWithTag.note.content
+            var noteTitle = noteWithTag.note.title
+            var noteContent = noteWithTag.note.content
+
+            if (noteTitle.length > maxQtdCharactersTitle) {
+                noteTitle = getShorterText(noteTitle, maxQtdCharactersTitle)
+            }
+
+            if (noteContent.length > maxQtdCharactersContent) {
+                noteContent = getShorterText(noteContent, maxQtdCharactersContent)
+            }
+
+            noteTitleItemView.text = noteTitle
+            noteContentItemView.text = noteContent
 
             if (noteWithTag.note.selected) {
                 noteContainerItemView.setBackgroundColor(Color.GRAY)
