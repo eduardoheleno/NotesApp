@@ -46,25 +46,15 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
     val currentNoteTag = MutableLiveData<Tag?>()
     val tagId = MutableLiveData<Int>()
 
-    private val _isEditingNoteTitle = MutableLiveData<Boolean>()
-    private val _isEditingNoteContent = MutableLiveData<Boolean>()
-
     private val _isOnSelectMode = MutableLiveData<Boolean>()
 
     val currentNote: LiveData<NoteWithTag?>
         get() = _currentNote
-    val isEditingNoteTitle: LiveData<Boolean>
-        get() = _isEditingNoteTitle
-    val isEditingNoteContent: LiveData<Boolean>
-        get() = _isEditingNoteContent
     val isOnSelectMode: LiveData<Boolean>
         get() = _isOnSelectMode
 
     init {
         _currentNote.value = null
-        _isEditingNoteTitle.value = false
-        _isEditingNoteContent.value = false
-
         _isOnSelectMode.value = false
     }
 
@@ -73,18 +63,13 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
         currentNoteTitle.value = ""
         currentNoteContent.value = ""
         currentNoteTag.value = null
-
-        _isEditingNoteTitle.value = true
-        _isEditingNoteContent.value = true
     }
 
     fun setOpenExistingNote(noteWithTag: NoteWithTag) {
         _currentNote.value = noteWithTag
         currentNoteTitle.value = noteWithTag.note.title
         currentNoteContent.value = noteWithTag.note.content
-
-        _isEditingNoteTitle.value = false
-        _isEditingNoteContent.value = false
+        tagId.value = noteWithTag.tag?.id
     }
 
     fun setIsOnSelectMode() {
@@ -106,7 +91,7 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
         _isOnSelectMode.value = false
     }
 
-    fun insert(note: Note) = viewModelScope.launch {
+    fun insertOrUpdate(note: Note) = viewModelScope.launch {
         repository.insertOrUpdate(note)
     }
 

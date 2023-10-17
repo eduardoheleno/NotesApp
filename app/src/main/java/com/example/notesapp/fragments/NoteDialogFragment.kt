@@ -35,6 +35,8 @@ class NoteDialogFragment : DialogFragment() {
             TagSearchDialogFragment().show(requireActivity().supportFragmentManager, TagSearchDialogFragment.TAG_SEARCH_DIALOG_FRAGMENT)
         }
 
+        binding.tagLabelSelected.text = noteViewModel.currentNote.value?.tag?.label
+
         noteViewModel.currentNoteTag.observe(requireActivity()) {
             if (it != null) {
                 noteViewModel.tagId.value = it.id
@@ -64,9 +66,12 @@ class NoteDialogFragment : DialogFragment() {
         val noteContent = binding.editNoteContentText.text.toString()
         val noteTagId = noteViewModel.tagId.value
 
-        if (noteTitle.isNotEmpty() && noteContent.isNotEmpty() && noteViewModel.currentNote.value == null) {
+        if (noteViewModel.currentNote.value != null) {
+            val note = Note(noteTitle, noteContent, noteTagId, noteViewModel.currentNote.value!!.note.id)
+            noteViewModel.insertOrUpdate(note)
+        } else if (noteTitle.isNotBlank() && noteContent.isNotBlank()) {
             val note = Note(noteTitle, noteContent, noteTagId)
-            noteViewModel.insert(note)
+            noteViewModel.insertOrUpdate(note)
         }
 
         super.onDismiss(dialog)
